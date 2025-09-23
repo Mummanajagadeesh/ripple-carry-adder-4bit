@@ -1,0 +1,90 @@
+# ===============================
+# Yosys Synthesis Script - ripple_carry_adder
+# With straight-line schematic style
+# ===============================
+
+# -------------------------------
+# 0. Create folder if needed
+# -------------------------------
+# mkdir -p yosys-reports
+
+# -------------------------------
+# 1. Read Design
+# -------------------------------
+read_verilog ripple_adder.v
+hierarchy -check
+synth -top ripple_carry_adder_4bit
+
+# -------------------------------
+# 2. Optimization and Checks
+# -------------------------------
+proc; opt; fsm; opt; memory; opt
+check > yosys-reports/ripple_adder_check.txt
+stat > yosys-reports/ripple_adder_stat.txt
+
+# -------------------------------
+# 3. Save Netlists
+# -------------------------------
+write_verilog yosys-reports/ripple_adder_synth.v
+write_json yosys-reports/ripple_adder_synth.json
+write_edif yosys-reports/ripple_adder_synth.edf
+write_blif yosys-reports/ripple_adder_synth.blif
+write_verilog yosys-reports/ripple_adder_synth_clean.v
+write_json yosys-reports/ripple_adder_synth_clean.json
+
+# -------------------------------
+# 4. RTL Diagram (straight lines)
+# -------------------------------
+show -format dot -stretch -prefix yosys-reports/ripple_adder_rtl
+# Convert to PNG:
+# dot -Tpng yosys-reports/ripple_adder_rtl.dot -o yosys-reports/ripple_adder_rtl.png
+
+# -------------------------------
+# 5. Hierarchy Diagram (straight lines)
+# -------------------------------
+hierarchy -top ripple_carry_adder_4bit
+show -format dot -stretch -prefix yosys-reports/ripple_adder_hierarchy
+# Convert to PNG:
+# dot -Tpng yosys-reports/ripple_adder_hierarchy.dot -o yosys-reports/ripple_adder_hierarchy.png
+
+# -------------------------------
+# 6. Flat Netlist (straight lines)
+# -------------------------------
+flatten
+show -format dot -stretch -prefix yosys-reports/ripple_adder_flat_netlist
+# Convert to PNG:
+# dot -Tpng yosys-reports/ripple_adder_flat_netlist.dot -o yosys-reports/ripple_adder_flat_netlist.png
+
+# -------------------------------
+# 7. Technology Mapping
+# -------------------------------
+techmap; opt
+stat -tech xilinx > yosys-reports/ripple_adder_techmap_stat.txt
+
+write_verilog yosys-reports/ripple_adder_mapped.v
+write_json yosys-reports/ripple_adder_mapped.json
+
+# -------------------------------
+# 8. Module Graph (straight lines)
+# -------------------------------
+show -format dot -stretch -prefix yosys-reports/module_ripple_adder
+# Convert to PNG:
+# dot -Tpng yosys-reports/module_ripple_adder.dot -o yosys-reports/module_ripple_adder.png
+
+# -------------------------------
+# 9. ABC / Rough Timing Analysis (Gate-level Mapping)
+# -------------------------------
+# Map to Sky130 standard cells (typical corner)
+abc -liberty /home/jagadeesh97/OpenROAD-flow-scripts/flow/platforms/sky130hs/lib/sky130_fd_sc_hs__tt_025C_1v80.lib
+clean
+stat > yosys-reports/inverter_abc_stat.txt
+
+# Save post-ABC netlists so Sky130 cells appear
+write_verilog yosys-reports/ripple_adder_abc.v
+write_json yosys-reports/ripple_adder_abc.json
+write_blif yosys-reports/ripple_adder_abc.blif
+
+# -------------------------------
+# 10. Done
+# -------------------------------
+log "All Yosys reports saved in yosys-reports/"
