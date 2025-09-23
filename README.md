@@ -2,6 +2,7 @@
 
 This repository demonstrates synthesis, placement, and routing of a 4-bit ripple carry adder using the **OpenROAD** toolchain inside the OpenLane container environment. It includes generating schematics, PNGs, and layout files with a white background.
 
+> Special Thanks to [Sanchit Kulkarni](https://www.linkedin.com/in/iamsanchitkulkarni/) Sir 
 ---
 
 ## Schematics
