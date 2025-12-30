@@ -5,6 +5,22 @@ This repository demonstrates synthesis, placement, and routing of a 4-bit ripple
 > Special Thanks to [Sanchit Kulkarni](https://www.linkedin.com/in/iamsanchitkulkarni/) Sir 
 ---
 
+<p align="center">
+  <img src="flow.gif" alt="flow">
+</p>
+
+```bash
+convert \
+  -delay 150 \
+  floorplan.png \
+  io_pins.png \
+  global_placement.png \
+  detailed_placement.png \
+  routing.png \
+  -loop 0 \
+  flow.gif
+
+```
 ## Schematics
 
 | Schematic with Library | Schematic without Library |
